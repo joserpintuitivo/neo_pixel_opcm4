@@ -15,6 +15,9 @@ defmodule Circuits.SPI.Nif do
   def open(_bus_name, _mode, _bits_per_word, _speed_hz, _delay_us, _lsb_first),
     do: :erlang.nif_error(:nif_not_loaded)
 
+  def neo_pixel_init(_count_leds),
+    do: :erlang.nif_error(:nif_not_loaded)
+
   def config(_ref), do: :erlang.nif_error(:nif_not_loaded)
   def transfer(_ref, _data), do: :erlang.nif_error(:nif_not_loaded)
   def close(_ref), do: :erlang.nif_error(:nif_not_loaded)

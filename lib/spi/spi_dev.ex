@@ -58,6 +58,17 @@ defmodule Circuits.SPI.SPIDev do
   end
 
   @doc """
+  Open an SPI bus
+  """
+  @impl Backend
+  def init(count_leds) do
+    with {:ok, ref} <-
+           Nif.neo_pixel_init(count_leds) do
+      {:ok, %__MODULE__{ref: ref}}
+    end
+  end
+
+  @doc """
   Return information about this backend
   """
   @impl Backend

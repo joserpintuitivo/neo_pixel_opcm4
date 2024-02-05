@@ -79,6 +79,27 @@ defmodule Circuits.SPI do
   end
 
   @doc """
+  Open a SPI bus device
+
+  On success, `open/2` returns a reference that may be passed to
+  with `transfer/2`. The device will be closed automatically when
+  the reference goes out of scope.
+
+  SPI is not a standardized interface so appropriate options will
+  different from device-to-device. The defaults use here work on
+  many devices.
+
+  Parameters:
+  * `bus_name` is the name of the bus (e.g., "spidev0.0"). See `bus_names/0`
+  * `opts` is a keyword list to configure the bus
+  """
+  @spec neo_pixel_init(binary()) :: {:ok, Bus.t()} | {:error, term()}
+  def neo_pixel_init(count_leds) when is_number(count_leds) do
+    {module, _default_options} = default_backend()
+    module.init(count_leds)
+  end
+
+  @doc """
   Return the configuration for this SPI bus
 
   The configuration could be different that what was given to `open/2` if

@@ -43,6 +43,12 @@ struct SpiConfig {
     int sw_lsb_first;
 };
 
+struct NeoPixelConfig {
+    unsigned int number_leds;
+    uint32_t *gs_rgb;
+    uint8_t *gs_temp;
+};
+
 /**
  * Return information about the HAL.
  *

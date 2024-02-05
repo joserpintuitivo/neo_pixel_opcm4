@@ -3,16 +3,27 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "spi_nif.h"
+#include "driver_ws2812b_interface.h"
+
+#define WS2812B_EACH_RESET_BIT_FRAME_LEN        512        /**< 512 */
 
 // SPI NIF Private data
 struct SpiNifPriv {
     ErlNifResourceType *spi_nif_res_type;
 };
 
+struct WsNifPriv {
+    ErlNifResourceType *ws_nif_res_type;
+};
+
 // SPI NIF Resource.
 struct SpiNifRes {
     int fd;
     struct SpiConfig config;
+};
+
+struct WsNifRes {
+    struct NeoPixelConfig config_ws;
 };
 
 static ERL_NIF_TERM atom_ok;
@@ -37,24 +48,24 @@ static void spi_dtor(ErlNifEnv *env, void *obj)
     }
 }
 
-static int spi_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM info)
+static int ws_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM info)
 {
 #ifdef DEBUG
 #ifdef LOG_PATH
     log_location = fopen(LOG_PATH, "w");
 #endif
 #endif
-    debug("spi_load");
+    debug("ws_load");
 
-    struct SpiNifPriv *priv = enif_alloc(sizeof(struct SpiNifPriv));
+    struct WsNifPriv *priv = enif_alloc(sizeof(struct WsNifPriv));
     if (!priv) {
-        error("Can't allocate spi priv");
+        error("Can't allocate ws priv");
         return 1;
     }
 
-    priv->spi_nif_res_type = enif_open_resource_type(env, NULL, "spi_nif_res_type", spi_dtor, ERL_NIF_RT_CREATE, NULL);
-    if (priv->spi_nif_res_type == NULL) {
-        error("open SPI NIF resource type failed");
+    priv->ws_nif_res_type = enif_open_resource_type(env, NULL, "ws_nif_res_type", spi_dtor, ERL_NIF_RT_CREATE, NULL);
+    if (priv->ws_nif_res_type == NULL) {
+        error("open WS NIF resource type failed");
         return 1;
     }
 
@@ -73,9 +84,9 @@ static int spi_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM info)
     return 0;
 }
 
-static void spi_unload(ErlNifEnv *env, void *priv_data)
+static void ws_unload(ErlNifEnv *env, void *priv_data)
 {
-    debug("spi_unload");
+    debug("ws_unload");
     enif_free(priv_data);
 }
 
@@ -123,6 +134,42 @@ static ERL_NIF_TERM spi_open(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]
 
     // Elixir side owns the resource. Safe for NIF side to release it.
     enif_release_resource(spi_nif_res);
+
+    return enif_make_tuple2(env, atom_ok, res_term);
+}
+
+static ERL_NIF_TERM neo_pixel_init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
+{
+    struct WsNifPriv *priv = enif_priv_data(env);
+    struct NeoPixelConfig config;
+    memset(&config, 0, sizeof(config));
+    uint32_t bit_size;
+
+    debug("ws812x_open");
+    if (!enif_get_uint(env, argv[0], &config.number_leds))
+        return enif_make_badarg(env);
+
+    bit_size = WS2812B_EACH_RESET_BIT_FRAME_LEN * config.number_leds;                                 /* set the bit size */
+    bit_size = bit_size / 8;                                                /* set the bit size */
+
+    // Asignar memoria dinámicamente para gs_rgb y gs_temp
+    config->gs_rgb = (uint32_t *)malloc(config.number_leds * sizeof(uint32_t));
+    config->gs_temp = (uint8_t *)malloc(bit_size * sizeof(uint8_t));
+
+    if(ws2812b_basic_init() == 1)
+    {
+        free(config->gs_rgb);
+        free(config->gs_temp);
+        return enif_make_tuple2(env, atom_error,
+                                enif_make_atom(env, error_str));
+    }
+
+    struct WsNifRes *ws_nif_res = enif_alloc_resource(priv->ws_nif_res_type, sizeof(struct WsNifRes));
+    ws_nif_res->config = config;
+    ERL_NIF_TERM res_term = enif_make_resource(env, ws_nif_res);
+
+    // Elixir side owns the resource. Safe for NIF side to release it.
+    enif_release_resource(ws_nif_res);
 
     return enif_make_tuple2(env, atom_ok, res_term);
 }
@@ -248,7 +295,8 @@ static ERL_NIF_TERM spi_max_transfer_size(ErlNifEnv *env, int argc, const ERL_NI
 
 static ErlNifFunc nif_funcs[] =
 {
-    {"open", 6, spi_open, ERL_NIF_DIRTY_JOB_IO_BOUND},
+    {"open", 6, open, ERL_NIF_DIRTY_JOB_IO_BOUND},
+    {"neo_pixel_init", 1, neo_pixel_init, ERL_NIF_DIRTY_JOB_IO_BOUND},
     {"config", 1, spi_config, 0},
     {"transfer", 2, spi_transfer, ERL_NIF_DIRTY_JOB_IO_BOUND},
     {"close", 1, spi_close, 0},
