@@ -2,21 +2,21 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-defmodule Circuits.SPI.SPIDev do
+defmodule Circuits.RGB.RGBDev do
   @moduledoc """
-  Circuits.SPI backend for the Linux spidev interface
+  Circuits.RGB backend for the Linux spidev interface
 
   This backend works on Nerves, embedded Linux, and desktop Linux.
   """
-  @behaviour Circuits.SPI.Backend
+  @behaviour Circuits.RGB.Backend
 
-  alias Circuits.SPI.Backend
-  alias Circuits.SPI.Nif
+  alias Circuits.RGB.Backend
+  alias Circuits.RGB.Nif
 
   defstruct [:ref]
 
   @doc """
-  Open an SPI bus
+  Open an RBG bus
   """
   @impl Backend
   def init() do
@@ -27,7 +27,7 @@ defmodule Circuits.SPI.SPIDev do
   end
 
   @impl Backend
-    def write_rgb(%Circuits.SPI.SPIDev{ref: ref}, len, data) do
+    def write_rgb(%Circuits.RGB.RGBDev{ref: ref}, len, data) do
       Nif.write_rgb(ref, len, data)
     end
 

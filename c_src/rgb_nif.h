@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef SPI_NIF_H
-#define SPI_NIF_H
+#ifndef RGB_NIF_H
+#define RGB_NIF_H
 
 #include "erl_nif.h"
 
@@ -40,4 +40,4 @@ struct NeoPixelConfig {
 
 
 
-#endif // SPI_NIF_H
+#endif // rgb_NIF_H

@@ -28,7 +28,7 @@ This is a prerelease so APIs may still change before the v2.0.0 release.
 * Changes
   * Support alternative backends for different operating systems or for
     simulated hardware
-  * Defer loading the Linux NIF until `Circuits.SPI.open/2` is called
+  * Defer loading the Linux NIF until `Circuits.RGB.init/0` is called
 
 ## v1.4.0 - 2022-12-31
 

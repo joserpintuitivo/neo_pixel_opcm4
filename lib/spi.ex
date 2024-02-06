@@ -2,13 +2,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-defmodule Circuits.SPI do
+defmodule Circuits.RGB do
   @moduledoc """
   This module enables Elixir programs to interact with hardware that's connected
   via a SPI bus.
   """
 
-  alias Circuits.SPI.Bus
+  alias Circuits.RGB.Bus
 
   @typedoc """
   Backends specify an implementation of a Circuits.SPI.Backend behaviour
@@ -56,7 +56,7 @@ defmodule Circuits.SPI do
 
   defp default_backend() do
     case Application.get_env(:circuits_spi, :default_backend) do
-      nil -> {Circuits.SPI.NilBackend, []}
+      nil -> {Circuits.RGB.NilBackend, []}
       m when is_atom(m) -> {m, []}
       {m, o} = value when is_atom(m) and is_list(o) -> value
     end

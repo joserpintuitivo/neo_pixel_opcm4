@@ -2,13 +2,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-defmodule Circuits.SPI.NilBackend do
+defmodule Circuits.RGB.NilBackend do
   @moduledoc """
-  Circuits.SPI backend when nothing else is available
+  Circuits.RGB backend when nothing else is available
   """
-  @behaviour Circuits.SPI.Backend
+  @behaviour Circuits.RGB.Backend
 
-  alias Circuits.SPI.Backend
+  alias Circuits.RGB.Backend
 
   @doc """
   Open an I2C bus

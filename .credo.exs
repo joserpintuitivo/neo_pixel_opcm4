@@ -5,7 +5,7 @@
       name: "default",
       files: %{
         included: ["lib/"],
-        excluded: ["lib/spi/spi_nif.ex"]
+        excluded: ["lib/rgb/rgb_nif.ex"]
       },
       strict: true,
       checks: [

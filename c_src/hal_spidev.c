@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-#include "spi_nif.h"
+#include "rgb_nif.h"
 #include <linux/spi/spidev.h>
 #include <sys/types.h>
 #include <inttypes.h>

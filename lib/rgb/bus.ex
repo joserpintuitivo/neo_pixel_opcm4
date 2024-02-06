@@ -2,9 +2,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-defprotocol Circuits.SPI.Bus do
+defprotocol Circuits.RGB.Bus do
   @moduledoc """
-  A bus is the connection to a real or virtual SPI controller
+  A bus is the connection to a real or virtual RGB controller
   """
 
   @doc """

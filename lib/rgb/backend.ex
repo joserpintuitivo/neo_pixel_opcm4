@@ -2,11 +2,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-defmodule Circuits.SPI.Backend do
+defmodule Circuits.RGB.Backend do
   @moduledoc """
   Backends provide the connection to the real or virtual SPI controller
   """
-  alias Circuits.SPI.Bus
+  alias Circuits.RGB.Bus
 
   @doc """
   Open a SPI bus device

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-#include "spi_nif.h"
+#include "rgb_nif.h"
 #include "driver_ws2812b_basic.h"
 
 #define WS2812B_EACH_RESET_BIT_FRAME_LEN        512        /**< 512 */
@@ -157,4 +157,4 @@ static ErlNifFunc nif_funcs[] =
     {"deinit", 0, deinit, 0}
 };
 
-ERL_NIF_INIT(Elixir.Circuits.SPI.Nif, nif_funcs, neo_pixel_load, NULL, NULL, neo_pixel_unload)
+ERL_NIF_INIT(Elixir.Circuits.RGB.Nif, nif_funcs, neo_pixel_load, NULL, NULL, neo_pixel_unload)
