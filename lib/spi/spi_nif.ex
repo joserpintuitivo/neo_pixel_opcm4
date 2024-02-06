@@ -12,9 +12,6 @@ defmodule Circuits.SPI.Nif do
     :erlang.load_nif(:code.priv_dir(:circuits_spi) ++ ~c"/spi_nif", 0)
   end
 
-  def neo_pixel_init(),
-    do: :erlang.nif_error(:nif_not_loaded)
-
-  def config(_ref), do: :erlang.nif_error(:nif_not_loaded)
-  def neo_pixel_deinit(), do: :erlang.nif_error(:nif_not_loaded)
+  def init(), do: :erlang.nif_error(:nif_not_loaded)
+  def deinit(), do: :erlang.nif_error(:nif_not_loaded)
 end

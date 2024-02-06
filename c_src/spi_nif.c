@@ -26,14 +26,14 @@ static ERL_NIF_TERM atom_delay_us;
 static ERL_NIF_TERM atom_lsb_first;
 static ERL_NIF_TERM atom_sw_lsb_first;
 
-static int neo_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM info)
+static int neo_pixel_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM info)
 {
 #ifdef DEBUG
 #ifdef LOG_PATH
     log_location = fopen(LOG_PATH, "w");
 #endif
 #endif
-    debug("ws_load");
+    debug("neo_pixel_load");
 
     struct WsNifPriv *priv = enif_alloc(sizeof(struct WsNifPriv));
     if (!priv) {
@@ -62,13 +62,13 @@ static int neo_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM info)
     return 0;
 }
 
-static void neo_unload(ErlNifEnv *env, void *priv_data)
+static void neo_pixel_unload(ErlNifEnv *env, void *priv_data)
 {
-    debug("ws_unload");
+    debug("neo_pixel_unload");
     enif_free(priv_data);
 }
 
-static ERL_NIF_TERM neo_pixel_init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
+static ERL_NIF_TERM init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 {
     struct WsNifPriv *priv = enif_priv_data(env);
     struct NeoPixelConfig config;
@@ -108,7 +108,7 @@ static ERL_NIF_TERM neo_pixel_init(ErlNifEnv *env, int argc, const ERL_NIF_TERM 
     return enif_make_tuple2(env, atom_ok, res_term);
 }
 
-static ERL_NIF_TERM neo_pixel_deinit(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
+static ERL_NIF_TERM deinit(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 {
     struct WsNifPriv *priv = enif_priv_data(env);
     struct WsNifRes *res;
@@ -127,8 +127,8 @@ static ERL_NIF_TERM neo_pixel_deinit(ErlNifEnv *env, int argc, const ERL_NIF_TER
 
 static ErlNifFunc nif_funcs[] =
 {
-    {"neo_pixel_init", 0, neo_pixel_init, 0},
-    {"neo_pixel_deinit", 0, neo_pixel_deinit, 0}
+    {"nit", 0, init, 0},
+    {"deinit", 0, deinit, 0}
 };
 
-ERL_NIF_INIT(Elixir.Circuits.SPI.Nif, nif_funcs, neo_load, NULL, NULL, neo_unload)
+ERL_NIF_INIT(Elixir.Circuits.SPI.Nif, nif_funcs, neo_pixel_load, NULL, NULL, neo_pixel_unload)

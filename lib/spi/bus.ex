@@ -16,8 +16,8 @@ defprotocol Circuits.SPI.Bus do
   practice for users to call `Circuits.SPI.close/1` (and hence this function) so that
   limited resources are freed before they're needed again.
   """
-  @spec close(t()) :: :ok
-  def close(bus)
+  @spec deinit() :: :ok | :error
+  def deinit()
 
 
 end

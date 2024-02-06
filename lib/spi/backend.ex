@@ -10,13 +10,6 @@ defmodule Circuits.SPI.Backend do
   alias Circuits.SPI.Bus
 
   @doc """
-  Return SPI bus names on this system
-
-  No supported options
-  """
-  @callback bus_names(options :: keyword()) :: [String.t()]
-
-  @doc """
   Open a SPI bus device
 
   On success, `open/2` returns a reference that may be passed to
@@ -31,11 +24,7 @@ defmodule Circuits.SPI.Backend do
   * `bus_name` is the name of the bus (e.g., "spidev0.0"). See `bus_names/0`
   * `opts` is a keyword list to configure the bus
   """
-  @callback open(bus_name :: String.t(), [SPI.spi_option()]) ::
+  @callback init() ::
               {:ok, Bus.t()} | {:error, term()}
 
-  @doc """
-  Return information about this backend
-  """
-  @callback info() :: map()
 end
