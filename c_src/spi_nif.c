@@ -101,7 +101,7 @@ static ERL_NIF_TERM init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
     return enif_make_tuple2(env, atom_ok, res_term);
 }
 
-static ERL_NIF_TERM write(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
+static ERL_NIF_TERM write_rgb(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 {
     struct WsNifPriv *priv = enif_priv_data(env);
     struct WsNifRes *res;
@@ -140,7 +140,7 @@ static ERL_NIF_TERM deinit(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 static ErlNifFunc nif_funcs[] =
 {
     {"init", 0, init, 0},
-    {"write", 3, write, ERL_NIF_DIRTY_JOB_IO_BOUND},
+    {"write_rgb", 3, write_rgb, ERL_NIF_DIRTY_JOB_IO_BOUND},
     {"deinit", 0, deinit, 0}
 };
 

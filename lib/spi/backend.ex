@@ -26,7 +26,7 @@ defmodule Circuits.SPI.Backend do
   @callback init() ::
               {:ok, Bus.t()} | {:error, term()}
 
-  @callback write(Bus.t(), integer(), integer()) ::
+  @callback write_rgb(Bus.t(), integer(), integer()) ::
               :ok | :error
 
   @callback deinit() ::

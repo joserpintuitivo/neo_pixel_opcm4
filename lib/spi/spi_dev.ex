@@ -27,8 +27,8 @@ defmodule Circuits.SPI.SPIDev do
   end
 
   @impl Backend
-    def write(%Circuits.SPI.SPIDev{ref: ref}, len, data) do
-      Nif.write(ref, len, data)
+    def write_rgb(%Circuits.SPI.SPIDev{ref: ref}, len, data) do
+      Nif.write_rgb(ref, len, data)
     end
 
   @impl Backend

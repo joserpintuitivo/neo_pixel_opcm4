@@ -39,10 +39,10 @@ defmodule Circuits.SPI do
     module.init()
   end
 
-  @spec write(Bus.t(), integer(), integer()) :: :ok | :error
-  def write(bus, len, data) do
+  @spec write_rgb(Bus.t(), integer(), integer()) :: :ok | :error
+  def write_rgb(bus, len, data) do
     {module, _default_options} = default_backend()
-    module.write(bus, len, data)
+    module.write_rgb(bus, len, data)
   end
 
   @doc """

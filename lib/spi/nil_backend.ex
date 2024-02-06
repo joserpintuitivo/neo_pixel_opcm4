@@ -21,7 +21,7 @@ defmodule Circuits.SPI.NilBackend do
   end
 
   @impl Backend
-  def write(_bus, _len, _data) do
+  def write_rgb(_bus, _len, _data) do
     :error
   end
 
