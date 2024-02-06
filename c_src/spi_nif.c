@@ -78,14 +78,14 @@ static ERL_NIF_TERM init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
     struct WsNifPriv *priv = enif_priv_data(env);
     struct NeoPixelConfig config;
     memset(&config, 0, sizeof(config));
-    uint32_t bit_size;
+    //uint32_t bit_size;
 
     debug("ws812x_open");
-    if (!enif_get_uint(env, argv[0], &config.number_leds))
-        return enif_make_badarg(env);
+    //if (!enif_get_uint(env, argv[0], &config.number_leds))
+     //   return enif_make_badarg(env);
 
-    bit_size = WS2812B_EACH_RESET_BIT_FRAME_LEN * config.number_leds;                                 /* set the bit size */
-    bit_size = bit_size / 8;                                                /* set the bit size */
+    //bit_size = WS2812B_EACH_RESET_BIT_FRAME_LEN * config.number_leds;                                 /* set the bit size */
+    //bit_size = bit_size / 8;                                                /* set the bit size */
 
     // Asignar memoria dinámicamente para gs_rgb y gs_temp
     //config->gs_rgb = (uint32_t *)malloc(config.number_leds * sizeof(uint32_t));
