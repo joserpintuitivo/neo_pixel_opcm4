@@ -26,6 +26,13 @@ static ERL_NIF_TERM atom_delay_us;
 static ERL_NIF_TERM atom_lsb_first;
 static ERL_NIF_TERM atom_sw_lsb_first;
 
+static void ws_dtor(ErlNifEnv *env, void *obj)
+{
+    struct WsNifRes *res = (struct SpiNifRes *) obj;
+
+    
+}
+
 static int neo_pixel_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM info)
 {
 #ifdef DEBUG
@@ -41,7 +48,7 @@ static int neo_pixel_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM info)
         return 1;
     }
 
-    priv->ws_nif_res_type = enif_open_resource_type(env, NULL, "ws_nif_res_type", spi_dtor, ERL_NIF_RT_CREATE, NULL);
+    priv->ws_nif_res_type = enif_open_resource_type(env, NULL, "ws_nif_res_type", ws_dtor, ERL_NIF_RT_CREATE, NULL);
     if (priv->ws_nif_res_type == NULL) {
         error("open WS NIF resource type failed");
         return 1;
@@ -99,7 +106,7 @@ static ERL_NIF_TERM init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
     }
 
     struct WsNifRes *ws_nif_res = enif_alloc_resource(priv->ws_nif_res_type, sizeof(struct WsNifRes));
-    ws_nif_res->config = config;
+    ws_nif_res->ws_config = config;
     ERL_NIF_TERM res_term = enif_make_resource(env, ws_nif_res);
 
     // Elixir side owns the resource. Safe for NIF side to release it.
@@ -117,6 +124,7 @@ static ERL_NIF_TERM deinit(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
     if(ws2812b_basic_deinit() != 0)
     {
         return atom_error;
+    }
     else
     {
         return atom_ok;
