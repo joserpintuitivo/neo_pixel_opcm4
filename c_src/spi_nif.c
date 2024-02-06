@@ -118,7 +118,7 @@ static ERL_NIF_TERM write_rgb(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[
     debug("ws_write");
     if (!enif_get_resource(env, argv[0], priv->ws_nif_res_type, (void **)&res) ||
             !enif_get_uint(env, argv[1], &number) ||
-            !enif_get_uint(env, argv[1], &color))
+            !enif_get_uint(env, argv[2], &color))
         return enif_make_badarg(env);
 
     /* write color */
