@@ -110,7 +110,7 @@ static ERL_NIF_TERM write_rgb(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[
     uint32_t temp_len;
 
     debug("ws_write");
-    if (!enif_get_resource(env, argv[0], priv->spi_nif_res_type, (void **)&res) ||
+    if (!enif_get_resource(env, argv[0], priv->ws_nif_res_type, (void **)&res) ||
             !enif_get_uint(env, argv[1], &len) ||
             !enif_get_uint(env, argv[1], &temp_len))
         return enif_make_badarg(env);
