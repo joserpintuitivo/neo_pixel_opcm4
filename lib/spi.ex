@@ -57,26 +57,6 @@ defmodule Circuits.SPI do
           sw_lsb_first: boolean()
         }
 
-  @doc """
-  Open a SPI bus device
-
-  On success, `open/2` returns a reference that may be passed to
-  with `transfer/2`. The device will be closed automatically when
-  the reference goes out of scope.
-
-  SPI is not a standardized interface so appropriate options will
-  different from device-to-device. The defaults use here work on
-  many devices.
-
-  Parameters:
-  * `bus_name` is the name of the bus (e.g., "spidev0.0"). See `bus_names/0`
-  * `opts` is a keyword list to configure the bus
-  """
-  @spec open(binary(), [spi_option()]) :: {:ok, Bus.t()} | {:error, term()}
-  def open(bus_name, options \\ []) when is_binary(bus_name) do
-    {module, default_options} = default_backend()
-    module.open(bus_name, Keyword.merge(default_options, options))
-  end
 
   @doc """
   Open a SPI bus device
@@ -94,45 +74,9 @@ defmodule Circuits.SPI do
   * `opts` is a keyword list to configure the bus
   """
   @spec neo_pixel_init(binary()) :: {:ok, Bus.t()} | {:error, term()}
-  def neo_pixel_init(count_leds) when is_number(count_leds) do
+  def neo_pixel_init() do
     {module, _default_options} = default_backend()
-    module.init(count_leds)
-  end
-
-  @doc """
-  Return the configuration for this SPI bus
-
-  The configuration could be different that what was given to `open/2` if
-  the device had to change it for it to work.
-  """
-  @spec config(Bus.t()) :: {:ok, spi_option_map()} | {:error, term()}
-  def config(spi_bus) do
-    Bus.config(spi_bus)
-  end
-
-  @doc """
-  Transfer data
-
-  Since each SPI transfer sends and receives simultaneously, the return value
-  will be a binary of the same length as `data`.
-  """
-  @spec transfer(Bus.t(), iodata()) :: {:ok, binary()} | {:error, term()}
-  def transfer(spi_bus, data) do
-    Bus.transfer(spi_bus, data)
-  end
-
-  @doc """
-  Transfer data and raise on error
-  """
-  @spec transfer!(Bus.t(), iodata()) :: binary()
-  def transfer!(spi_bus, data) do
-    case transfer(spi_bus, data) do
-      {:error, reason} ->
-        raise "SPI failure: " <> to_string(reason)
-
-      {:ok, result} ->
-        result
-    end
+    module.init()
   end
 
   @doc """
@@ -143,58 +87,4 @@ defmodule Circuits.SPI do
     Bus.close(spi_bus)
   end
 
-  @doc """
-  Return a list of available SPI bus names.  If nothing is returned,
-  it's possible that the kernel driver for that SPI bus is not enabled or the
-  kernel's device tree is not configured. On Raspbian, run `raspi-config` and
-  look in the advanced options.
-  ```
-  iex> Circuits.SPI.bus_names
-  ["spidev0.0", "spidev0.1"]
-  ```
-  """
-  @spec bus_names() :: [binary()]
-  def bus_names() do
-    {m, o} = default_backend()
-    m.bus_names(o)
-  end
-
-  @doc """
-  Return info about the low level SPI interface
-
-  This may be helpful when debugging SPI issues.
-  """
-  @spec info(backend() | nil) :: map()
-  def info(backend \\ nil)
-
-  def info(nil), do: info(default_backend())
-  def info({backend, _options}), do: backend.info()
-
-  defp default_backend() do
-    case Application.get_env(:circuits_spi, :default_backend) do
-      nil -> {Circuits.SPI.NilBackend, []}
-      m when is_atom(m) -> {m, []}
-      {m, o} = value when is_atom(m) and is_list(o) -> value
-    end
-  end
-
-  @doc """
-  Return the maximum transfer size in bytes
-
-  The number of bytes that can be sent and received at a time
-  may be capped by the low level SPI interface. For example,
-  the Linux `spidev` driver allocates its transfer buffer at
-  initialization based on the `bufsiz` parameter and rejects
-  requests that won't fit.
-
-  If you're sending large amounts of data over SPI, use this
-  function to determine how to split up large messages.
-  """
-  @spec max_transfer_size(Bus.t() | nil) :: non_neg_integer()
-  def max_transfer_size(bus \\ nil) do
-    case bus do
-      nil -> 0
-      bus -> Bus.max_transfer_size(bus)
-    end
-  end
 end

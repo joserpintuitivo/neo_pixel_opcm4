@@ -34,72 +34,12 @@
 #define elapsed_microseconds() 0
 #endif
 
-struct SpiConfig {
-    unsigned int mode;
-    unsigned int bits_per_word;
-    unsigned int speed_hz;
-    unsigned int delay_us;
-    int lsb_first;
-    int sw_lsb_first;
-};
-
 struct NeoPixelConfig {
     unsigned int number_leds;
-    uint32_t *gs_rgb;
-    uint8_t *gs_temp;
+    uint32_t gs_rgb[24];
+    uint8_t gs_temp[1024];
 };
 
-/**
- * Return information about the HAL.
- *
- * This should return a map with the name of the HAL and any info that
- * would help debug issues with it.
- */
-ERL_NIF_TERM hal_info(ErlNifEnv *env);
 
-/**
- * Return max transfer size about the HAL.
- *
- * This should return an unsigned 64-bit int value that indicates the
- * maximum transfer size in bytes
- */
-ERL_NIF_TERM hal_max_transfer_size(ErlNifEnv *env);
-
-/**
- * Open an SPI device
- *
- * This sets the configuration and reads it back in case the
- * implementation adjusts a value.
- *
- * @param device the name of the SPI device
- * @param config the SPI configuration
- * @param error_str a message to return on error
- *
- * @return <0 on error or a handle on success
- */
-int hal_spi_open(const char *device,
-                 struct SpiConfig *config,
-                 char *error_str);
-
-/**
- * Free resources associated with an SPI device
- */
-void hal_spi_close(int fd);
-
-/**
- * Transfer data over SPI
- *
- * @param fd the file descriptor returned from hal_spi_open
- * @param config the SPI configuration to use
- * @param to_write
- * @param to_read
- * @param len
- * @return
- */
-int hal_spi_transfer(int fd,
-                     const struct SpiConfig *config,
-                     const uint8_t *to_write,
-                     uint8_t *to_read,
-                     size_t len);
 
 #endif // SPI_NIF_H

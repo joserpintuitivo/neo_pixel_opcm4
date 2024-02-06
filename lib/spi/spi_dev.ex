@@ -44,58 +44,20 @@ defmodule Circuits.SPI.SPIDev do
   Open an SPI bus
   """
   @impl Backend
-  def open(bus_name, options) do
-    mode = Keyword.get(options, :mode, 0)
-    bits_per_word = Keyword.get(options, :bits_per_word, 8)
-    speed_hz = Keyword.get(options, :speed_hz, 1_000_000)
-    delay_us = Keyword.get(options, :delay_us, 10)
-    lsb_first = Keyword.get(options, :lsb_first, false)
-
+  def init() do
     with {:ok, ref} <-
-           Nif.open(to_string(bus_name), mode, bits_per_word, speed_hz, delay_us, lsb_first) do
+           Nif.neo_pixel_init() do
       {:ok, %__MODULE__{ref: ref}}
     end
   end
 
-  @doc """
-  Open an SPI bus
-  """
-  @impl Backend
-  def init(count_leds) do
-    with {:ok, ref} <-
-           Nif.neo_pixel_init(count_leds) do
-      {:ok, %__MODULE__{ref: ref}}
-    end
-  end
-
-  @doc """
-  Return information about this backend
-  """
-  @impl Backend
-  def info() do
-    Nif.info()
-    |> Map.put(:backend, __MODULE__)
-  end
 
   defimpl Bus do
-    @impl Bus
-    def config(%Circuits.SPI.SPIDev{ref: ref}) do
-      Nif.config(ref)
-    end
 
     @impl Bus
-    def transfer(%Circuits.SPI.SPIDev{ref: ref}, data) do
-      Nif.transfer(ref, data)
+    def deinit() do
+      Nif.neo_pixel_deinit()
     end
 
-    @impl Bus
-    def close(%Circuits.SPI.SPIDev{ref: ref}) do
-      Nif.close(ref)
-    end
-
-    @impl Bus
-    def max_transfer_size(%Circuits.SPI.SPIDev{}) do
-      Nif.max_transfer_size()
-    end
   end
 end
