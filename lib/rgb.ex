@@ -55,7 +55,7 @@ defmodule Circuits.RGB do
   end
 
   defp default_backend() do
-    case Application.get_env(:circuits_spi, :default_backend) do
+    case Application.get_env(:circuits_rgb, :default_backend) do
       nil -> {Circuits.RGB.NilBackend, []}
       m when is_atom(m) -> {m, []}
       {m, o} = value when is_atom(m) and is_list(o) -> value
