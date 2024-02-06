@@ -28,9 +28,7 @@ static ERL_NIF_TERM atom_sw_lsb_first;
 
 static void ws_dtor(ErlNifEnv *env, void *obj)
 {
-    struct WsNifRes *res = (struct SpiNifRes *) obj;
 
-    
 }
 
 static int neo_pixel_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM info)
@@ -106,7 +104,7 @@ static ERL_NIF_TERM init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
     }
 
     struct WsNifRes *ws_nif_res = enif_alloc_resource(priv->ws_nif_res_type, sizeof(struct WsNifRes));
-    ws_nif_res->ws_config = config;
+    ws_nif_res->config_ws = config;
     ERL_NIF_TERM res_term = enif_make_resource(env, ws_nif_res);
 
     // Elixir side owns the resource. Safe for NIF side to release it.
