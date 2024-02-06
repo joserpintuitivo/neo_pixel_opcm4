@@ -133,7 +133,7 @@ static ERL_NIF_TERM deinit(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 
 static ErlNifFunc nif_funcs[] =
 {
-    {"nit", 0, init, 0},
+    {"init", 0, init, 0},
     {"deinit", 0, deinit, 0}
 };
 
