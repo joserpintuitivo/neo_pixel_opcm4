@@ -6,6 +6,8 @@
 #include "driver_ws2812b_basic.h"
 
 #define WS2812B_EACH_RESET_BIT_FRAME_LEN        512        /**< 512 */
+#define WS2812B_LEN        48                               /**< 48 */
+#define WS2812B_TEM_LEN        (WS2812B_EACH_RESET_BIT_FRAME_LEN * WS2812B_LEN) / 8                               /**< 48 */
 
 struct WsNifPriv {
     ErlNifResourceType *ws_nif_res_type;
@@ -14,6 +16,9 @@ struct WsNifPriv {
 struct WsNifRes {
     struct NeoPixelConfig config_ws;
 };
+
+static uint32_t gs_rgb[WS2812B_LEN];                /**< rgb buffer */
+static uint8_t gs_temp[WS2812B_TEM_LEN];              /**< temp buffer*/
 
 static ERL_NIF_TERM atom_ok;
 static ERL_NIF_TERM atom_error;
@@ -106,15 +111,23 @@ static ERL_NIF_TERM write_rgb(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[
     struct WsNifPriv *priv = enif_priv_data(env);
     struct WsNifRes *res;
     
-    uint32_t len;
-    uint32_t temp_len;
+    uint32_t number;
+    uint32_t color;
+    uint32_t i;
 
     debug("ws_write");
     if (!enif_get_resource(env, argv[0], priv->ws_nif_res_type, (void **)&res) ||
-            !enif_get_uint(env, argv[1], &len) ||
-            !enif_get_uint(env, argv[1], &temp_len))
+            !enif_get_uint(env, argv[1], &number) ||
+            !enif_get_uint(env, argv[1], &color))
         return enif_make_badarg(env);
-    if (ws2812b_basic_write(&res->config_ws.gs_rgb, len, &res->config_ws.gs_temp, temp_len) != 0)
+
+    /* write color */
+    for (i = 0; i < number; i++)
+    {
+        gs_rgb[i] = color;
+    }
+
+    if (ws2812b_basic_write(gs_rgb, number, gs_temp, WS2812B_TEM_LEN) != 0)
         return atom_error;
 
     return atom_ok;

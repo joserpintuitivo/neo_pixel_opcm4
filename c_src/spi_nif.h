@@ -36,8 +36,6 @@
 
 struct NeoPixelConfig {
     unsigned int number_leds;
-    uint32_t gs_rgb[48];
-    uint8_t gs_temp[3072];
 };
 
 
