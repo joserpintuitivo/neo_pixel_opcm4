@@ -47,4 +47,12 @@ defmodule Circuits.SPI do
     Bus.deinit()
   end
 
+  defp default_backend() do
+    case Application.get_env(:circuits_spi, :default_backend) do
+      nil -> {Circuits.SPI.NilBackend, []}
+      m when is_atom(m) -> {m, []}
+      {m, o} = value when is_atom(m) and is_list(o) -> value
+    end
+  end
+
 end
