@@ -114,7 +114,7 @@ static ERL_NIF_TERM write_rgb(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[
             !enif_get_uint(env, argv[1], &len) ||
             !enif_get_uint(env, argv[1], &temp_len))
         return enif_make_badarg(env);
-    if (ws2812b_basic_write(&res->config.gs_rgb, len, &res->config.gs_temp, temp_len) != 0)
+    if (ws2812b_basic_write(&res->config_ws.gs_rgb, len, &res->config_ws.gs_temp, temp_len) != 0)
         return atom_error;
 
     return atom_ok;
