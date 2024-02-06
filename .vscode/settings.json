@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "driver_ws2812b.h": "c",
+        "driver_ws2812b_basic.h": "c"
+    }
+}
