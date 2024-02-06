@@ -115,8 +115,8 @@ static ERL_NIF_TERM init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 
 static ERL_NIF_TERM deinit(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 {
-    struct WsNifPriv *priv = enif_priv_data(env);
-    struct WsNifRes *res;
+    // WsNifPriv *priv = enif_priv_data(env);
+    //struct WsNifRes *res;
     debug("ws_close");
 
     if(ws2812b_basic_deinit() != 0)
