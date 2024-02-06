@@ -6,7 +6,6 @@ defmodule Circuits.SPI.Backend do
   @moduledoc """
   Backends provide the connection to the real or virtual SPI controller
   """
-  alias Circuits.SPI
   alias Circuits.SPI.Bus
 
   @doc """
@@ -26,6 +25,9 @@ defmodule Circuits.SPI.Backend do
   """
   @callback init() ::
               {:ok, Bus.t()} | {:error, term()}
+
+  @callback write(Bus.t(), integer(), integer()) ::
+              :ok | :error
 
   @callback deinit() ::
               :ok | :error

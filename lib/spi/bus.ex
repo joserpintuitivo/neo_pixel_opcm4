@@ -7,8 +7,6 @@ defprotocol Circuits.SPI.Bus do
   A bus is the connection to a real or virtual SPI controller
   """
 
-  alias Circuits.SPI
-
   @doc """
   Free up resources associated with the bus
 

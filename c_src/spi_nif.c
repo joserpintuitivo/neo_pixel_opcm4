@@ -78,26 +78,14 @@ static ERL_NIF_TERM init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
     struct WsNifPriv *priv = enif_priv_data(env);
     struct NeoPixelConfig config;
     memset(&config, 0, sizeof(config));
-    //uint32_t bit_size;
 
     debug("ws812x_open");
-    //if (!enif_get_uint(env, argv[0], &config.number_leds))
-     //   return enif_make_badarg(env);
-
-    //bit_size = WS2812B_EACH_RESET_BIT_FRAME_LEN * config.number_leds;                                 /* set the bit size */
-    //bit_size = bit_size / 8;                                                /* set the bit size */
-
-    // Asignar memoria dinámicamente para gs_rgb y gs_temp
-    //config->gs_rgb = (uint32_t *)malloc(config.number_leds * sizeof(uint32_t));
-    //config->gs_temp = (uint8_t *)malloc(bit_size * sizeof(uint8_t));
-
+    
     char error_str[128];
     snprintf(error_str, sizeof(error_str), "ok");
 
     if(ws2812b_basic_init() != 0)
     {
-        //free(config->gs_rgb);
-        //free(config->gs_temp);
         snprintf(error_str, sizeof(error_str), "error");
         return enif_make_tuple2(env, atom_error,
                                 enif_make_atom(env, error_str));
@@ -113,10 +101,28 @@ static ERL_NIF_TERM init(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
     return enif_make_tuple2(env, atom_ok, res_term);
 }
 
+static ERL_NIF_TERM write(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
+{
+    struct WsNifPriv *priv = enif_priv_data(env);
+    struct WsNifRes *res;
+    
+    uint32_t len;
+    uint32_t temp_len;
+
+    debug("ws_write");
+    if (!enif_get_resource(env, argv[0], priv->spi_nif_res_type, (void **)&res) ||
+            !enif_get_uint(env, argv[1], &len) ||
+            !enif_get_uint(env, argv[1], &temp_len))
+        return enif_make_badarg(env);
+    if (ws2812b_basic_write(&res->config.gs_rgb, len, &res->config.gs_temp, temp_len) != 0)
+        return atom_error;
+
+    return atom_ok;
+}
+
 static ERL_NIF_TERM deinit(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 {
-    // WsNifPriv *priv = enif_priv_data(env);
-    //struct WsNifRes *res;
+
     debug("ws_close");
 
     if(ws2812b_basic_deinit() != 0)
@@ -134,6 +140,7 @@ static ERL_NIF_TERM deinit(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 static ErlNifFunc nif_funcs[] =
 {
     {"init", 0, init, 0},
+    {"write", 3, write, ERL_NIF_DIRTY_JOB_IO_BOUND},
     {"deinit", 0, deinit, 0}
 };
 

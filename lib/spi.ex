@@ -39,6 +39,12 @@ defmodule Circuits.SPI do
     module.init()
   end
 
+  @spec write(Bus.t(), integer(), integer()) :: :ok | :error
+  def write(bus, len, data) do
+    {module, _default_options} = default_backend()
+    module.write(bus, len, data)
+  end
+
   @doc """
   Release any resources associated with the given file descriptor
   """

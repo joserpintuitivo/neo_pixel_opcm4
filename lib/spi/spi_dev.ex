@@ -11,7 +11,6 @@ defmodule Circuits.SPI.SPIDev do
   @behaviour Circuits.SPI.Backend
 
   alias Circuits.SPI.Backend
-  alias Circuits.SPI.Bus
   alias Circuits.SPI.Nif
 
   defstruct [:ref]
@@ -26,6 +25,11 @@ defmodule Circuits.SPI.SPIDev do
       {:ok, %__MODULE__{ref: ref}}
     end
   end
+
+  @impl Backend
+    def write(%Circuits.SPI.SPIDev{ref: ref}, len, data) do
+      Nif.write(ref, len, data)
+    end
 
   @impl Backend
     def deinit() do
