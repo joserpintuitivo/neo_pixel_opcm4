@@ -20,4 +20,9 @@ defmodule Circuits.SPI.NilBackend do
     {:error, :unimplemented}
   end
 
+  @impl Backend
+  def deinit() do
+    :error
+  end
+
 end
