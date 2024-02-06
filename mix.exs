@@ -1,13 +1,13 @@
-defmodule Circuits.SPI.MixProject do
+defmodule Circuits.RGB.MixProject do
   use Mix.Project
 
   @version "2.0.2"
-  @description "Use SPI in Elixir"
+  @description "Use RGB in Elixir"
   @source_url "https://github.com/elixir-circuits/circuits_spi"
 
   def project do
     [
-      app: :circuits_spi,
+      app: :circuits_rgb,
       version: @version,
       elixir: "~> 1.10",
       description: @description,
@@ -33,7 +33,7 @@ defmodule Circuits.SPI.MixProject do
 
   def application do
     # IMPORTANT: This provides a default at runtime and at compile-time when
-    # circuits_spi is pulled in as a dependency.
+    # circuits_rgb is pulled in as a dependency.
     [env: [default_backend: default_backend()]]
   end
 
@@ -74,12 +74,12 @@ defmodule Circuits.SPI.MixProject do
   end
 
   defp default_backend(), do: default_backend(Mix.env(), Mix.target())
-  defp default_backend(:test, _target), do: {Circuits.SPI.SPIDev, test: true}
+  defp default_backend(:test, _target), do: {Circuits.RGB.RGBDev, test: true}
 
   defp default_backend(_env, :host) do
     case :os.type() do
-      {:unix, :linux} -> Circuits.SPI.SPIDev
-      _ -> {Circuits.SPI.SPIDev, test: true}
+      {:unix, :linux} -> Circuits.RGB.RGBDev
+      _ -> {Circuits.RGB.RGBDev, test: true}
     end
   end
 
@@ -89,7 +89,7 @@ defmodule Circuits.SPI.MixProject do
     # assume a Linux/Nerves build If not, then the NIF will be build for the
     # host, so use the default host backend
     case System.fetch_env("CROSSCOMPILE") do
-      {:ok, _} -> Circuits.SPI.SPIDev
+      {:ok, _} -> Circuits.RGB.RGBDev
       :error -> default_backend(env, :host)
     end
   end
@@ -98,12 +98,12 @@ defmodule Circuits.SPI.MixProject do
     # Since user configuration hasn't been loaded into the application
     # environment when `project/1` is called, load it here for building
     # the NIF.
-    backend = Application.get_env(:circuits_spi, :default_backend, default_backend())
+    backend = Application.get_env(:circuits_rgb, :default_backend, default_backend())
 
-    System.put_env("CIRCUITS_SPI_SPIDEV", spi_dev_compile_mode(backend))
+    System.put_env("CIRCUITS_RGB_RGBDEV", rgb_dev_compile_mode(backend))
   end
 
-  defp spi_dev_compile_mode({Circuits.SPI.SPIDev, options}) do
+  defp rgb_dev_compile_mode({Circuits.RGB.RGBDev, options}) do
     if Keyword.get(options, :test) do
       "test"
     else
@@ -111,11 +111,11 @@ defmodule Circuits.SPI.MixProject do
     end
   end
 
-  defp spi_dev_compile_mode(Circuits.SPI.SPIDev) do
+  defp rgb_dev_compile_mode(Circuits.RGB.RGBDev) do
     "normal"
   end
 
-  defp spi_dev_compile_mode(_other) do
+  defp rgb_dev_compile_mode(_other) do
     "disabled"
   end
 
