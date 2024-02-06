@@ -64,7 +64,7 @@ endif
 ERL_CFLAGS ?= -I$(ERL_EI_INCLUDE_DIR)
 ERL_LDFLAGS ?= -L$(ERL_EI_LIBDIR) -lei
 
-HAL_SRC ?= c_src/hal_spidev.c
+HAL_SRC ?= c_src/driver_ws2812b_basic.c
 SRC = $(HAL_SRC) c_src/spi_nif.c
 HEADERS =$(wildcard c_src/*.h)
 OBJ = $(SRC:c_src/%.c=$(BUILD)/%.o)
