@@ -27,13 +27,9 @@ defmodule Circuits.SPI.SPIDev do
     end
   end
 
-
-  defimpl Bus do
-
-    @impl Bus
+  @impl Backend
     def deinit() do
       Nif.deinit()
     end
 
-  end
 end

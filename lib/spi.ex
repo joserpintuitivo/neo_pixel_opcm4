@@ -33,7 +33,7 @@ defmodule Circuits.SPI do
   * `bus_name` is the name of the bus (e.g., "spidev0.0"). See `bus_names/0`
   * `opts` is a keyword list to configure the bus
   """
-  @spec init(binary()) :: {:ok, Bus.t()} | {:error, term()}
+  @spec init() :: {:ok, Bus.t()} | {:error, term()}
   def init() do
     {module, _default_options} = default_backend()
     module.init()
@@ -44,7 +44,8 @@ defmodule Circuits.SPI do
   """
   @spec deinit() :: :ok | :error
   def deinit() do
-    Bus.deinit()
+    {module, _default_options} = default_backend()
+    module.deinit()
   end
 
   defp default_backend() do
