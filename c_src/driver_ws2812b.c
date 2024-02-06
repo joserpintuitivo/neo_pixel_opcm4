@@ -244,6 +244,8 @@ uint8_t ws2812b_write(ws2812b_handle_t *handle, uint32_t *rgb, uint32_t len, uin
         
         return 1;                                                           /* return error */
     }
+
+    handle->debug_print("ws2812b: number is %d and written color is 0x%X.\n", len, rgb[0]);
     
     return 0;                                                               /* success return 0 */
 }
