@@ -27,4 +27,7 @@ defmodule Circuits.SPI.Backend do
   @callback init() ::
               {:ok, Bus.t()} | {:error, term()}
 
+  @callback deinit() ::
+              :ok | :error
+
 end
